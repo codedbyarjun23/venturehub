@@ -17,6 +17,10 @@ class CommentController extends Controller
             'content' => $request->content,
         ]);
         
+        if ($post->user_id !== $request->user()->id) {
+            $post->user->notify(new \App\Notifications\CommentAdded($request->user(), $post));
+        }
+        
         return back()->with('success', 'Comment added!');
     }
 }

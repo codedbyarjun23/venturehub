@@ -16,6 +16,9 @@ class LikeController extends Controller
         } else {
             $post->likes()->attach($user->id);
             $liked = true;
+            if ($post->user_id !== $user->id) {
+                $post->user->notify(new \App\Notifications\PostLiked($user, $post));
+            }
         }
 
         return response()->json([

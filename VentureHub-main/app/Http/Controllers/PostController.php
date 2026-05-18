@@ -19,11 +19,18 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'tags' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ]);
         
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('posts', 'public');
+        }
+
         $post = $request->user()->posts()->create([
             'title' => $request->title,
             'content' => $request->content,
+            'image_path' => $imagePath,
         ]);
 
         if ($request->tags) {

@@ -26,4 +26,32 @@ class ProjectController extends Controller
 
         return back()->with('success', 'Project posted successfully!');
     }
+
+    public function apply(Request $request, Project $project)
+    {
+        $request->validate(['message' => 'nullable|string']);
+        
+        $application = $project->applications()->create([
+            'user_id' => $request->user()->id,
+            'message' => $request->message,
+        ]);
+
+        if ($project->user_id !== $request->user()->id) {
+            $project->user->notify(new \App\Notifications\ProjectApplied($request->user(), $project));
+        }
+
+        return back()->with('success', 'Application submitted!');
+    }
+
+    public function updateApplication(Request $request, \App\Models\ProjectApplication $application)
+    {
+        if ($application->project->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $request->validate(['status' => 'required|in:accepted,rejected']);
+        $application->update(['status' => $request->status]);
+
+        return back()->with('success', 'Application status updated!');
+    }
 }

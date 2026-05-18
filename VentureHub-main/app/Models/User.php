@@ -41,6 +41,14 @@ class User extends Authenticatable
         return $this->hasMany(Event::class);
     }
 
+    public function applications() {
+        return $this->hasMany(ProjectApplication::class);
+    }
+
+    public function attendingEvents() {
+        return $this->belongsToMany(Event::class, 'event_user');
+    }
+
     public function likedPosts() {
         return $this->belongsToMany(Post::class, 'post_user_likes')->withTimestamps();
     }

@@ -23,12 +23,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Collaboration Hub
     Route::resource('projects', ProjectController::class);
+    Route::post('/projects/{project}/apply', [ProjectController::class, 'apply'])->name('projects.apply');
+    Route::post('/projects/applications/{application}/update', [ProjectController::class, 'updateApplication'])->name('projects.applications.update');
     
     // Events Module
     Route::resource('events', EventController::class);
+    Route::post('/events/{event}/rsvp', [EventController::class, 'rsvp'])->name('events.rsvp');
 
     Route::get('/network', [ProfileController::class, 'index'])->name('network.index');
     Route::get('/network/{user}', [ProfileController::class, 'show'])->name('network.show');
+    
+    Route::get('/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search.index');
 });
 
 Route::middleware('auth')->group(function () {

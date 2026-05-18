@@ -35,6 +35,17 @@
                                     <svg class="w-5 h-5 mr-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                     Organized by <span class="text-emerald-400 ml-1">{{ $event->organizer->name }}</span>
                                 </div>
+                                <div class="mt-4 pt-4 border-t border-gray-700/30">
+                                    <form action="{{ route('events.rsvp', $event) }}" method="POST" class="flex items-center">
+                                        @csrf
+                                        @if($event->attendees->contains(auth()->id()))
+                                            <button type="submit" class="bg-gray-700 text-emerald-400 border border-emerald-500/30 px-5 py-1.5 rounded-lg font-bold text-sm hover:bg-gray-600 transition">Cancel RSVP</button>
+                                        @else
+                                            <button type="submit" class="bg-emerald-500 text-gray-900 px-5 py-1.5 rounded-lg font-bold text-sm shadow-md shadow-emerald-500/20 hover:-translate-y-0.5 transition transform">RSVP Now</button>
+                                        @endif
+                                        <span class="ml-4 text-sm text-gray-400 font-medium">{{ $event->attendees->count() }} attending</span>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

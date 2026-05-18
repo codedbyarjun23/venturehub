@@ -37,6 +37,20 @@
                         </div>
                     </div>
                     @endif
+                    
+                    @if($project->status == 'open' && $project->user_id !== auth()->id())
+                    <div class="mt-6 pt-6 border-t border-gray-700/50 relative z-10" x-data="{ openApply: false }">
+                        <button @click="openApply = !openApply" class="bg-cyan-500 text-gray-900 px-6 py-2.5 rounded-xl font-black text-sm shadow-lg shadow-cyan-500/30 hover:-translate-y-0.5 transition transform">Apply to Join</button>
+                        
+                        <div x-show="openApply" class="mt-4 bg-gray-900/50 p-4 rounded-xl border border-gray-700" style="display: none;">
+                            <form action="{{ route('projects.apply', $project) }}" method="POST">
+                                @csrf
+                                <textarea name="message" required placeholder="Why are you a good fit?" rows="2" class="w-full bg-gray-800 rounded-lg border border-gray-600 text-white text-sm focus:ring-cyan-500 mb-3 px-3 py-2"></textarea>
+                                <button type="submit" class="bg-cyan-500 text-gray-900 px-4 py-2 rounded-lg font-bold text-sm">Submit Application</button>
+                            </form>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             @endforeach
 

@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-10 relative z-10 pb-20">
+    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-10 relative z-10 pb-20">
         
         <!-- Flash Message -->
         @if (session('success'))
@@ -25,7 +25,7 @@
                 Drop an Idea or Seek Feedback
             </h3>
             
-            <form action="{{ route('posts.store') }}" method="POST" class="relative z-10 space-y-6">
+            <form action="{{ route('posts.store') }}" method="POST" class="relative z-10 space-y-6" enctype="multipart/form-data">
                 @csrf
                 <div class="relative group/input">
                     <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/30 to-purple-500/30 rounded-xl blur opacity-0 group-focus-within/input:opacity-100 transition duration-500"></div>
@@ -43,6 +43,11 @@
                 <div class="relative group/input">
                     <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/30 to-purple-500/30 rounded-xl blur opacity-0 group-focus-within/input:opacity-100 transition duration-500"></div>
                     <input type="text" name="tags" placeholder="Tags (e.g. SaaS, Design, Feedback)..." class="relative w-full rounded-xl border-white/10 bg-[#0b0f19]/60 backdrop-blur-md text-gray-100 placeholder-gray-500 focus:border-indigo-400/50 focus:ring-0 px-5 py-3 text-sm shadow-inner transition-all duration-300">
+                </div>
+                
+                <div class="relative group/input">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500/30 to-purple-500/30 rounded-xl blur opacity-0 group-focus-within/input:opacity-100 transition duration-500"></div>
+                    <input type="file" name="image" accept="image/*" class="relative w-full rounded-xl border-white/10 bg-[#0b0f19]/60 backdrop-blur-md text-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-500/10 file:text-indigo-400 hover:file:bg-indigo-500/20 px-5 py-3 text-sm shadow-inner transition-all duration-300">
                 </div>
                 
                 <div class="flex justify-end pt-2">
@@ -82,10 +87,17 @@
                     </div>
                     
                     <div class="relative z-10 pl-2">
-                        <h5 class="text-2xl font-extrabold text-white mb-4 tracking-tight leading-snug">{{ $post->title }}</h5>
-                        <div class="text-gray-300/90 leading-relaxed text-lg mb-4 font-light prose prose-invert prose-indigo max-w-none">
+                        <h5 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-6 tracking-tight leading-snug">{{ $post->title }}</h5>
+                        <div class="text-gray-300 leading-relaxed text-lg mb-8 font-normal prose prose-invert prose-indigo max-w-none bg-[#0b0f19]/40 p-6 rounded-2xl border border-white/5 shadow-inner">
                             {!! Str::markdown(htmlspecialchars($post->content)) !!}
                         </div>
+                        
+                        @if($post->image_path)
+                            <div class="mb-6 rounded-2xl overflow-hidden border border-white/10 shadow-lg relative group/img">
+                                <div class="absolute inset-0 bg-indigo-500/10 opacity-0 group-hover/img:opacity-100 transition duration-300 pointer-events-none"></div>
+                                <img src="{{ Storage::url($post->image_path) }}" alt="Post image" class="w-full h-auto object-cover max-h-96">
+                            </div>
+                        @endif
                         
                         @if($post->tags->isNotEmpty())
                             <div class="flex flex-wrap gap-2 mb-8">

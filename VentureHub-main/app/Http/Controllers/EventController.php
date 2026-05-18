@@ -26,4 +26,17 @@ class EventController extends Controller
 
         return back()->with('success', 'Event scheduled successfully!');
     }
+
+    public function rsvp(Request $request, Event $event)
+    {
+        $user = $request->user();
+        if ($event->attendees()->where('user_id', $user->id)->exists()) {
+            $event->attendees()->detach($user->id);
+            $message = 'You are no longer attending this event.';
+        } else {
+            $event->attendees()->attach($user->id);
+            $message = 'RSVP successful! See you there.';
+        }
+        return back()->with('success', $message);
+    }
 }
